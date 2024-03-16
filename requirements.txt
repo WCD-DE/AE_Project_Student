@@ -1,2 +1,4 @@
+#please do not use this file for this. Follow the instructions in "how to add layer to lambda in a quick way.txt" instead.
+
 boto3
 snowflake-connector-python
