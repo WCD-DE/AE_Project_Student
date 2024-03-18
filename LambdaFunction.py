@@ -76,7 +76,7 @@ def lambda_handler(event, context):
 
 
     # Load the data from the stage into a table (example)
-    copy_into_query = f"COPY INTO {schema}.{table} FROM @{stage_name}/{file_name} FILE_FORMAT =COMMA_CSV;"  
+    copy_into_query = f"COPY INTO {schema}.{table} FROM @{stage_name}/{file_name} FILE_FORMAT =COMMA_CSV ON_ERROR=CONTINUE;"  
     cursor.execute(copy_into_query)
 
 
