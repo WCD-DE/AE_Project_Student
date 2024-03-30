@@ -70,7 +70,7 @@ VALUES (
 
 CREATE OR REPLACE TASK sf_tpcds.intermediate.updating_old_records_in_customer_snapshot
     WAREHOUSE = COMPUTE_WH
-    AFTER merging_new_records_in_customer_snapshot
+    AFTER sf_tpcds.intermediate.merging_new_records_in_customer_snapshot
     AS
 MERGE INTO SF_TPCDS.INTERMEDIATE.CUSTOMER_SNAPSHOT t1
 USING TPCDS.RAW_AIR.CUSTOMER t2
@@ -102,7 +102,7 @@ THEN UPDATE SET
 
 CREATE OR REPLACE TASK sf_tpcds.intermediate.creating_customer_dimension
     WAREHOUSE = COMPUTE_WH
-    AFTER updating_old_records_in_customer_snapshot
+    AFTER sf_tpcds.intermediate.updating_old_records_in_customer_snapshot
     AS
 create or replace transient table SF_TPCDS.ANALYTICS.CUSTOMER_DIM as
         (select 
