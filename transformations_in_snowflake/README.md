@@ -9,4 +9,5 @@ Brief description about these files and the order they should be used is given b
 5. daily_aggregated_sales.sql -> Creates sales fact with the sales aggregated to a day.
 6. weekly_sales_inventory_fact.sql -> Creates sales fact with the sales aggregated to a week.
 7. testing.sql -> Contains examples of tests that can be run on different tables.
-8. tasks.sql -> Showcase how queries can be run on Snowflake on a schedule using tasks.
+8. tasks_dimensions.sql -> Showcase how queries can be run on Snowflake on a schedule using tasks. 
+9. tasks_and_stored_procedures_facts.sql -> Showcase how queries can be run on Snowflake on a schedule using tasks and stored procedures. 
