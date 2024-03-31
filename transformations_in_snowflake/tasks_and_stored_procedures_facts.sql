@@ -114,6 +114,10 @@ CALL populating_daily_aggregated_sales_incrementally();
 ALTER TASK sf_tpcds.intermediate.creating_daily_aggregated_sales_incrementally RESUME;
 EXECUTE TASK sf_tpcds.intermediate.creating_daily_aggregated_sales_incrementally;
 DROP TASK sf_tpcds.intermediate.creating_daily_aggregated_sales_incrementally;
+DROP PROCEDURE sf_tpcds.intermediate.populating_daily_aggregated_sales_incrementally();
+
+truncate table SF_TPCDS.INTERMEDIATE.DAILY_AGGREGATED_SALES;
+
 
 
 ---------------------------- Weekly Aggregated Sales -------------------------------------------
@@ -241,3 +245,6 @@ CALL populating_weekly_aggregated_sales_incrementally();
 ALTER TASK sf_tpcds.analytics.creating_weekly_aggregated_sales_incrementally RESUME;
 EXECUTE TASK sf_tpcds.analytics.creating_weekly_aggregated_sales_incrementally;
 DROP TASK sf_tpcds.analytics.creating_weekly_aggregated_sales_incrementally;
+DROP PROCEDURE sf_tpcds.analytics.populating_weekly_aggregated_sales_incrementally();
+
+truncate table SF_TPCDS.ANALYTICS.WEEKLY_SALES_INVENTORY;
