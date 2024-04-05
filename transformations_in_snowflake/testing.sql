@@ -25,8 +25,10 @@ select count(*) = 0 from
 
 
 -- Adhoc Testing 
-Select C_CURRENT_CDEMO_SK, cd.cd_demo_sk
-from TPCDS.RAW.customer c
-left join TPCDS.RAW.customer_demographics cd
+select count(*) = 0 from 
+(select C_CURRENT_CDEMO_SK, cd.cd_demo_sk
+from TPCDS.RAW_AIR.customer c
+left join TPCDS.RAW_AIR.customer_demographics cd
 on c.C_CURRENT_CDEMO_SK = cd.cd_demo_sk
-where  C_CURRENT_CDEMO_SK is not null and cd.cd_demo_sk is null;
+where  C_CURRENT_CDEMO_SK is not null and cd.cd_demo_sk is null)
+;
