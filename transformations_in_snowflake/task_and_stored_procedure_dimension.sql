@@ -155,9 +155,9 @@ CREATE OR REPLACE PROCEDURE sf_tpcds.analytics.populating_customer_dimension_usi
 
 CREATE OR REPLACE TASK sf_tpcds.analytics.creating_customer_dimension_using_scd_type_2
     WAREHOUSE = COMPUTE_WH
-    SCHEDULE = 'USING CRON * 8 * * * UTC'
+    SCHEDULE = 'USING CRON 0 8 * * * UTC'
     AS
-CALL populating_weekly_aggregated_sales_incrementally();
+CALL sf_tpcds.analytics.populating_customer_dimension_using_scd_type_2();
 
 ALTER TASK sf_tpcds.analytics.creating_customer_dimension_using_scd_type_2 RESUME;
 EXECUTE TASK sf_tpcds.analytics.creating_customer_dimension_using_scd_type_2;
