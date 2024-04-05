@@ -107,7 +107,7 @@ CREATE OR REPLACE PROCEDURE sf_tpcds.intermediate.populating_daily_aggregated_sa
 
 CREATE OR REPLACE TASK sf_tpcds.intermediate.creating_daily_aggregated_sales_incrementally
     WAREHOUSE = COMPUTE_WH
-    SCHEDULE = 'USING CRON * 8 * * * UTC'
+    SCHEDULE = 'USING CRON 0 8 * * * UTC'
     AS
 CALL populating_daily_aggregated_sales_incrementally();
 
@@ -238,7 +238,7 @@ CREATE OR REPLACE PROCEDURE sf_tpcds.analytics.populating_weekly_aggregated_sale
 
 CREATE OR REPLACE TASK sf_tpcds.analytics.creating_weekly_aggregated_sales_incrementally
     WAREHOUSE = COMPUTE_WH
-    SCHEDULE = 'USING CRON * 9 * * 0 UTC'
+    SCHEDULE = 'USING CRON 0 9 * * 0 UTC'
     AS
 CALL populating_weekly_aggregated_sales_incrementally();
 
