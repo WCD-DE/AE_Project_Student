@@ -36,7 +36,7 @@ SELECT
     SUM_PROFIT_WK
 FROM
     aggregating_daily_sales_to_week daily_sales
-INNER JOIN TPCDS.RAW.DATE_DIM as date
+INNER JOIN TPCDS.RAW_AIR.DATE_DIM as date
 on daily_sales.SOLD_WK_NUM=date.wk_num
 and daily_sales.sold_yr_num=date.yr_num
 and date.day_of_wk_num=0
@@ -49,7 +49,7 @@ SELECT
     date.d_date_sk as friday_sk
 FROM
     finding_first_date_of_the_week daily_sales
-INNER JOIN TPCDS.RAW.DATE_DIM as date
+INNER JOIN TPCDS.RAW_AIR.DATE_DIM as date
 on daily_sales.SOLD_WK_NUM=date.wk_num
 and daily_sales.sold_yr_num=date.yr_num
 and date.day_of_wk_num=5
