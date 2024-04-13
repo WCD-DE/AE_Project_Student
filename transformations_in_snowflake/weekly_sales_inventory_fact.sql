@@ -24,6 +24,7 @@ HAVING
     sold_wk_sk >= NVL($LAST_SOLD_WK_SK,0)
 ),
 
+-- We need to have the same sold_wk_sk for all the items. Currently, any items that didn't have any sales on Sunday (first day of the week) would not have Sunday date as sold_wk_sk so this CTE will correct that.
 finding_first_date_of_the_week as (
 SELECT 
     WAREHOUSE_SK, 
@@ -42,24 +43,23 @@ and daily_sales.sold_yr_num=date.yr_num
 and date.day_of_wk_num=0
 ),
 
--- This will help us to join with inventory table as inventory table gets populated every friday
-populating_friday_date_for_the_week as (
+-- This will help sales and inventory tables to join together using wk_num and yr_num
+date_columns_in_inventory_table as (
 SELECT 
-    *,
-    date.d_date_sk as friday_sk
+    inventory.*,
+    date.wk_num as inv_wk_num,
+    date.yr_num as inv_yr_num
 FROM
-    finding_first_date_of_the_week daily_sales
+    tpcds.raw_air.inventory inventory
 INNER JOIN TPCDS.RAW_AIR.DATE_DIM as date
-on daily_sales.SOLD_WK_NUM=date.wk_num
-and daily_sales.sold_yr_num=date.yr_num
-and date.day_of_wk_num=5
+on inventory.inv_date_sk = date.d_date_sk
 )
 
 select 
        warehouse_sk, 
        item_sk, 
-       max(SOLD_WK_SK) as sold_wk_sk,
-       sold_wk_num as sold_wk_num ,
+       min(SOLD_WK_SK) as sold_wk_sk,
+       sold_wk_num as sold_wk_num,
        sold_yr_num as sold_yr_num,
        sum(sum_qty_wk) as sum_qty_wk,
        sum(sum_amt_wk) as sum_amt_wk,
@@ -68,9 +68,9 @@ select
        sum(coalesce(inv.inv_quantity_on_hand, 0)) as inv_qty_wk, 
        sum(coalesce(inv.inv_quantity_on_hand, 0)) / sum(sum_qty_wk) as wks_sply,
        iff(avg_qty_dy>0 and avg_qty_dy>inv_qty_wk, true , false) as low_stock_flg_wk
-from populating_friday_date_for_the_week
-left join tpcds.raw_air.inventory inv 
-    on inv_date_sk = friday_sk and item_sk = inv_item_sk and inv_warehouse_sk = warehouse_sk
+from finding_first_date_of_the_week
+left join date_columns_in_inventory_table inv 
+    on inv_wk_num = sold_wk_num and inv_yr_num = sold_yr_num and item_sk = inv_item_sk and inv_warehouse_sk = warehouse_sk
 group by 1, 2, 4, 5
 -- extra precaution because we don't want negative or zero quantities in our final model
 having sum(sum_qty_wk) > 0
@@ -110,3 +110,4 @@ SELECT
 FROM SF_TPCDS.ANALYTICS.WEEKLY_SALES_INVENTORY_TMP;
 
 select * from SF_TPCDS.ANALYTICS.WEEKLY_SALES_INVENTORY;
+
