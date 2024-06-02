@@ -15,29 +15,33 @@ def lambda_handler(event, context):
     account = 'lcryxrf-kj08803'
     warehouse = 'COMPUTE_WH'
     database = 'tpcds'
-    schema = 'raw'
+    schema = 'raw_air'
     table = 'inventory'
     user = 'wcdsnow'
-    password = 'xxxxxxx'
+    password = 'Wcd123456'
     role='accountadmin'
     stage_name = 'inv_Stage'
-
-    # Download the data from the API endpoint
-    response = requests.get(url)
-    response.raise_for_status()
     
+    # Your AWS Access Key and Secret
+    aws_access_key_id = "put your aws access key here"
+    aws_secret_access_key = "put your aws secret access key here"
     
 
-    # Save the data to the destination file in /tmp directory
-    file_path = os.path.join(destination_folder, file_name)
-    with open(file_path, 'wb') as file:
-        file.write(response.content)
-        
-    with open(file_path, 'r') as file:
+    client = boto3.client(
+        's3',    
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
+        )
+
+    # use boto3 to download the file from the S3 Requester Pays bucket
+    client.download_file(Bucket='de-materials-tpcds', Key=file_name, Filename=local_file_path, ExtraArgs={'RequestPayer': 'requester'})
+
+    # Print the file content
+    with open(local_file_path, 'r') as file:
         file_content = file.read()
         print("File Content:")
         print(file_content)
-
+        
 
 
 
@@ -76,7 +80,7 @@ def lambda_handler(event, context):
 
 
     # Load the data from the stage into a table (example)
-    copy_into_query = f"COPY INTO {schema}.{table} FROM @{stage_name}/{file_name} FILE_FORMAT =COMMA_CSV ON_ERROR=CONTINUE;"  
+    copy_into_query = f"COPY INTO {schema}.{table} FROM @{stage_name}/{file_name} FILE_FORMAT =COMMA_CSV;"  
     cursor.execute(copy_into_query)
 
 
