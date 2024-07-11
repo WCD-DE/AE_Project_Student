@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     schema = 'raw_air'
     table = 'inventory'
     user = 'wcdsnow'
-    password = 'Wcd123456'
+    password = 'xxxxxxxx'
     role='accountadmin'
     stage_name = 'inv_Stage'
     
